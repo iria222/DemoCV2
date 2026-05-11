@@ -6,13 +6,18 @@ import os
 
 
 output_path = "./output/"
-model_path = "./TrainedModel/"
 
 os.makedirs(output_path, exist_ok=True)
 
-if len(sys.argv) < 2 or len(sys.argv) > 2:
-    print("Usage: python main.py <image_path>")
+if len(sys.argv) != 3:
+    print("Usage: python main.py <image_path> <model_path>")
     sys.exit(1)
+
+# Get image path from command line
+image_path = sys.argv[1]
+
+# Get model path from command line
+model_path = sys.argv[2]
 
 if torch.cuda.is_available():
     device_name = "cuda"
@@ -24,14 +29,13 @@ else:
 device = torch.device(device_name)
 print(f"Code runs in {device}")
 
-# Load generator
-G_file = model_path + "baseline.pt"
 
-G = torch.jit.load(G_file, map_location=device)
-G.eval()
-
-# Get image path from command line
-image_path = sys.argv[1]
+try:
+    G = torch.jit.load(model_path, map_location=device)
+    G.eval()
+except Exception as e:
+    print(f"An error has ocurred when loading the model {e}")
+    sys.exit(1)
 
 # Same transformations as when training
 transform = transforms.Compose([
@@ -40,8 +44,13 @@ transform = transforms.Compose([
     transforms.Normalize([0.5]*3, [0.5]*3)
 ])
 
-#Load input image
-input_image = Image.open(image_path).convert("RGB")
+try:
+    #Load input image
+    input_image = Image.open(image_path).convert("RGB")
+except Exception as e:
+    print(f"An error has ocurred when loading the model {e}")
+    sys.exit(1)
+
 input_tensor = transform(input_image)
 
 input_tensor = input_tensor.unsqueeze(0).to(device)
