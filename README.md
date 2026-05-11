@@ -1,2 +1,2 @@
 # DemoCV2
-Usage: python main.py <image_path>
+Usage: python main.py <image_path> <model_path>
