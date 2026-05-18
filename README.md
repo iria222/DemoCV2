@@ -5,7 +5,7 @@
 # DemoCV2
 This demo uses Image-to-Image translation models to make inference taking an image as input.
 
-Different pre-trained models are available for testing in the ''models'' folder.
+The pre-trained models (.pt files) must be downloaded from the Releases page.
 
 Usage: python main.py <image_path> <model_path>
 
